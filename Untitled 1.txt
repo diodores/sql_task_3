@@ -1,61 +1,48 @@
 
-# Создаем табличку Жанров
-CREATE TABLE IF NOT EXISTS Genres(
+
+
+
+
+CREATE TABLE IF NOT EXISTS singer (id serial primary key, name varchar(80) not null unique);
+
+CREATE TABLE IF NOT EXISTS genre(
  	id serial primary key,
  	genre_name varchar(50) not null unique);
 
+CREATE TABLE IF NOT EXISTS singergenre (
+    id serial primary key,
+    singer_id integer references singer(id),
+    genre_id integer references genre(id));
 
-# Создаем таблицу Списка исполнителей
-CREATE TABLE IF NOT EXISTS List_of_perfomens (
+CREATE TABLE IF NOT EXISTS album (
 	id serial primary key,
-	name varchar(80) not null unique);
-	id_genre integer references Generes(id));
+	title varchar(50) not null unique,
+	year_of_start integer not null,
+	ratio numeric not null check(ratio > 0));
 
+CREATE TABLE IF NOT EXISTS singeralbum (
+    id serial primary key,
+    singer_id integer references singer(id),
+    album_id integer references album(id));
 
-# Промежуточная таблица Жанр/Исполнитель
-CREATE TABLE IF NOT EXISTS Genere_Perfomens (
-	id_performer integer references List_of_perfomens(id)
-	id_genere integer references Generes(id));
-
-
-#Создаем таблицу содержащую альбомы исполнителя
-CREATE TABLE IF NOT EXISTS Albums (
+CREATE TABLE IF NOT EXISTS track(
 	id serial primary key,
-	id_performer integer references List_of_perfomens(id),
-	album_mame varchar(100) not null,
-	year integer);
-
-
-# Промежуточная таблица Исполнитель/Альбом
-CREATE TABLE IF NOT EXISTS Perfomens_Album (
-	id_album integer reference Almums(id),
-	id_performer integer references List_of_perfomens(id);
-
-
-# Создаем таблицу сборников
-CREATE TABLE IF NOT EXISTS Collection (
-	id serial primary key,
-	collection_name varchar(100) not null,
-	year integer);
-
-
-# Таблица с треками
-CREATE TABLE IF NOT EXISTS Tracks (
-	id serial primary key,
-	id_album integer references Almums(id),
-	track_name name varchar(100) not null,
+	track_title varchar(50) not null unique,
 	duration integer not null,
+	is_like boolean not null,
+	album_id integer references album(id)
+	);
 
+CREATE TABLE IF NOT EXISTS collection(
+	id serial primary key,
+	collection_title varchar(100) not null unique,
+	description text not null,
+	start_year integer not null);
 
-# Промежуточная таблица Сборник/Треки 
-CREATE TABLE IF NOT EXISTS Colection_Tracks (
-	id_track integer references Tracks(id)
-	id_collection integer references Collection(id)
-
-
-
-
-
+CREATE TABLE IF NOT EXISTS trackcollection (
+    id serial primary key,
+    collection_id integer references collection(id),
+    track_id integer references track(id));
 
 
 
